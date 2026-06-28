@@ -1,7 +1,7 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const { nanoid } = require('nanoid');
-
+const path = require('path');
 const app = express();
 const port = 3000;
 
@@ -21,7 +21,7 @@ db.run(`
 
 
 
- 
+
 
 app.post('/api/shorten', (req, res) => {
   const { original_url } = req.body;
@@ -53,7 +53,7 @@ app.post('/api/shorten', (req, res) => {
 
 
 
- 
+
 
 
 app.get('/:short_url', (req, res) => {
@@ -68,9 +68,8 @@ app.get('/:short_url', (req, res) => {
       }
 
       if (!row) {
-        return res.status(404).json({ error: 'Short URL not found' });
+        return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
       }
-
 
       res.redirect(row.original_url);
     }
